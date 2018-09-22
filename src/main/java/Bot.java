@@ -42,7 +42,7 @@ public class Bot extends TelegramLongPollingBot {
 
     public void onUpdateReceived(Update update){
         Message message = update.getMessage();
-        if (message != null && message.hasText()){
+        if (message !=  null && message.hasText()){
             switch (message.getText()){
                 case "/help":
                     sendMsg(message, "Чем могу помочь?");
