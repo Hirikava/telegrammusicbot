@@ -14,7 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bot extends TelegramLongPollingBot {
+
     public static void main(String[] args) {
+        // иницилизация команд (вынести в отдельный инит)
+        DiologListner.registrateHandler("!help",new StringHandler("Я пока ничего не умею, но я стану лучше!"));
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try{
@@ -26,11 +29,7 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public void sendMsg(Message message, String text) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.enableMarkdown(true);
-        sendMessage.setChatId(message.getChatId().toString());
-        sendMessage.setReplyToMessageId(message.getMessageId());
-        sendMessage.setText(text);
+        SendMessage sendMessage = DiologListner.getHandler(text).handle(message);
         try {
             setButtons(sendMessage);
             sendMessage(sendMessage);
@@ -43,15 +42,7 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update){
         Message message = update.getMessage();
         if (message !=  null && message.hasText()){
-            switch (message.getText()){
-                case "/help":
-                    sendMsg(message, "Чем могу помочь?");
-                    break;
-                case "/setting":
-                    sendMsg(message, "Что будем настраивать?");
-                    break;
-                default:
-            }
+            this.sendMsg(message,message.getText());
         }
     }
 
@@ -65,8 +56,8 @@ public class Bot extends TelegramLongPollingBot {
         List<KeyboardRow> keyboardRowsList = new ArrayList<>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
 
-        keyboardFirstRow.add(new KeyboardButton("/help"));
-        keyboardFirstRow.add(new KeyboardButton("/setting"));
+        keyboardFirstRow.add(new KeyboardButton("!help"));
+        keyboardFirstRow.add(new KeyboardButton("!setting"));
 
         keyboardRowsList.add(keyboardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowsList);
