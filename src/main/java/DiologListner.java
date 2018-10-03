@@ -6,8 +6,9 @@ public  class DiologListner {
 
     public static IHandler getHandler(String text)
     {
-        if(comandHandlerDict.containsKey(text))
-            return comandHandlerDict.get(text);
+        String token = text.split(" ")[0];
+        if(comandHandlerDict.containsKey(token))
+            return comandHandlerDict.get(token);
         else
             return new StringHandler("Command not found");
     }

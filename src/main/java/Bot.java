@@ -9,7 +9,7 @@ import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
-
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +18,7 @@ public class Bot extends TelegramLongPollingBot {
     public static void main(String[] args) {
         // иницилизация команд (вынести в отдельный инит)
         DiologListner.registrateHandler("!help",new StringHandler("Я пока ничего не умею, но я стану лучше!"));
+        DiologListner.registrateHandler("!play", new LinkHandler());
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try{
