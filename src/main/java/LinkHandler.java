@@ -10,7 +10,7 @@ public class LinkHandler implements IHandler{
         SendMessage sndmsg = new SendMessage();
         sndmsg.enableMarkdown(true);
         sndmsg.setChatId(msg.getChatId());
-        sndmsg.setText(new Link(msg.getText().split(" ")[1]).GetName());
+        sndmsg.setText(new Link(msg.getText().split("\"")[1]).GetName());
         return sndmsg;
     }
 }

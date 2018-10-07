@@ -17,8 +17,8 @@ public class Bot extends TelegramLongPollingBot {
 
     public static void main(String[] args) {
         // иницилизация команд (вынести в отдельный инит)
-        DiologListner.registrateHandler("!help",new StringHandler("Я пока ничего не умею, но я стану лучше!"));
-        DiologListner.registrateHandler("!play", new LinkHandler());
+        DiologListner.registrateHandler("/help",new StringHandler("Я пока ничего не умею, но я стану лучше!"));
+        DiologListner.registrateHandler("/play", new LinkHandler());
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try{
@@ -57,8 +57,7 @@ public class Bot extends TelegramLongPollingBot {
         List<KeyboardRow> keyboardRowsList = new ArrayList<>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
 
-        keyboardFirstRow.add(new KeyboardButton("!help"));
-        keyboardFirstRow.add(new KeyboardButton("!setting"));
+        keyboardFirstRow.add(new KeyboardButton("/help"));
 
         keyboardRowsList.add(keyboardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowsList);
