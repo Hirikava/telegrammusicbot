@@ -19,6 +19,7 @@ public class Bot extends TelegramLongPollingBot {
         // иницилизация команд (вынести в отдельный инит)
         DiologListner.registrateHandler("/help",new StringHandler("Я пока ничего не умею, но я стану лучше!"));
         DiologListner.registrateHandler("/play", new LinkHandler());
+        DiologListner.registrateHandler("/start", new DataBaseStartHandler());
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try{
@@ -58,6 +59,7 @@ public class Bot extends TelegramLongPollingBot {
         KeyboardRow keyboardFirstRow = new KeyboardRow();
 
         keyboardFirstRow.add(new KeyboardButton("/help"));
+        keyboardFirstRow.add(new KeyboardButton("/start"));
 
         keyboardRowsList.add(keyboardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowsList);
