@@ -9,8 +9,7 @@ public class DataBaseBus {
     SQLiteDataSource dataSource;
 
 
-    public DataBaseBus(String url)
-    {
+    public DataBaseBus(String url) {
         dataSource = new SQLiteDataSource();
         dataSource.setUrl(url);
     }

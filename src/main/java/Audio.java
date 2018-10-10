@@ -8,6 +8,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -18,11 +20,11 @@ public class Audio {
     private String name;
 
     public Audio(String link) {
-        BrowserSetup();
-        Download(link);
+        browserSetup();
+        download(link);
     }
 
-    private void BrowserSetup(){
+    private void browserSetup(){
         System.setProperty("webdriver.chrome.driver", "/home/artem/IdeaProjects/Bot/telegrammusicbot/src/main/resources/drivers/chromedriver");
         HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
         chromePrefs.put("profile.default_content_settings.popups", 0);
@@ -35,7 +37,7 @@ public class Audio {
         driver = new ChromeDriver(cap);
     }
 
-    private void Download(String link) {
+    private void download(String link) {
         String downloadPage = "https://tomp3.pro/" + link.replaceAll("(:/+|\\.|/|\\?|=)","-");
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -47,21 +49,44 @@ public class Audio {
                 .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div[class$='ready']")));
         WebElement downloadButton = driver.findElement(By.cssSelector("li.media-parent"));
         downloadButton.click();
-        //Заместо нижнего кода нужно проверять прошла ли загрузка
-        try {
-            TimeUnit.SECONDS.sleep(20);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        File papka = new File(path+"/newpapaka");
+        papka.mkdir();
+        FindAudio();
+        while (isDownloading(name));
         driver.quit();
     }
 
     //Проверка загружен ли файл
-    private boolean isDownloadComlete() {
+    private boolean isDownloading(String file) {
+        File folder = new File(path);
+        File[] audiofiles = folder.listFiles();
+        while(!Arrays.asList(audiofiles).contains(file)) {
+            audiofiles = folder.listFiles();
+        }
         return true;
     }
 
-    private String getPath() {
+    private void FindAudio() {
+        File folder = new File(path);
+        String downloadFile = null;
+        File[] audiofiles = folder.listFiles();
+        while (downloadFile == null){
+            audiofiles = folder.listFiles();
+            for (File audio: audiofiles) {
+                if (audio.getName().endsWith("crdownload")) {
+                    downloadFile = audio.getName();
+                    break;
+                }
+            }
+        }
+        name = downloadFile.substring(0, downloadFile.length()-10);
+    }
+
+    public String getPath() {
         return path;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -3,9 +3,7 @@ import org.telegram.telegrambots.api.objects.Message;
 
 public abstract class IDataBaseHandler implements IHandler {
 
-    public SendMessage handle(Message message)
-    {
-
+    public SendMessage handle(Message message) {
         SendMessage sndmsg = new SendMessage();
         sndmsg.enableMarkdown(true);
         sndmsg.setChatId(message.getChatId());
@@ -13,5 +11,6 @@ public abstract class IDataBaseHandler implements IHandler {
         return sndmsg;
 
     }
+
     public abstract String prep(Message msg);
 }
