@@ -17,7 +17,7 @@ public class StartHandler implements IHandler{
                 return new StringHandler("You are already registrated in DataBase.").handle(message);
             else {
                 connection.createStatement()
-                        .executeQuery("INSERT INTO Users VALUES (" + message.getChatId() + ");");
+                        .execute("INSERT INTO Users VALUES (" + message.getChatId() + ");");
                 return new StringHandler("You are sucsessfuly registarated in DataBase!").handle(message);
             }
         }

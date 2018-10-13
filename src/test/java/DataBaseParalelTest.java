@@ -12,7 +12,7 @@ public class DataBaseParalelTest {
         DataBase.Initialization("jdbc:sqlite:src/DataBase.db");
         Connection connection = DataBase.getInstance().getConecction();
         try {
-            connection.createStatement().executeQuery("CREATE TABLE Users ( userID BIGINT );");
+            connection.createStatement().execute("CREATE TABLE Users ( userID BIGINT );");
         }
         catch (SQLException ex) {
             System.out.println(ex);
