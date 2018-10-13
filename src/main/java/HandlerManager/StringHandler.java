@@ -1,3 +1,6 @@
+package HandlerManager;
+
+import HandlerManager.IHandler;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 
@@ -10,11 +13,13 @@ public class StringHandler implements IHandler {
     }
 
     @Override
-    public SendMessage handle(Message msg) {
+    public MessageInfo handle(Message msg) {
         SendMessage sndMsg = new SendMessage();
         sndMsg.enableMarkdown(true);
         sndMsg.setChatId(msg.getChatId());
         sndMsg.setText(this.answer);
-        return sndMsg;
+        MessageInfo msgInfo = new MessageInfo();
+        msgInfo.addSendObject(sndMsg);
+        return msgInfo;
     }
 }

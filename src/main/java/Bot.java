@@ -1,5 +1,9 @@
+import HandlerManager.MainDialogueListiner;
+import HandlerManager.MessageInfo;
+import HandlerManager.StringHandler;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
+import org.telegram.telegrambots.api.methods.send.SendAudio;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
@@ -9,17 +13,13 @@ import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
-import java.sql.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Bot extends TelegramLongPollingBot {
 
     public static void main(String[] args) {
-        // иницилизация команд (вынести в отдельный инит)
-        DiologListner.registrateHandler("/help",new StringHandler("Я пока ничего не умею, но я стану лучше!"));
-        DiologListner.registrateHandler("/play", new LinkHandler());
-        DiologListner.registrateHandler("/start", new DataBaseStartHandler());
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try{
@@ -30,21 +30,35 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendMsg(Message message, String text) {
-        SendMessage sendMessage = DiologListner.getHandler(text).handle(message);
+    public void sendMsg(MessageInfo messageInfo){
         try {
-            setButtons(sendMessage);
+            for(Object sendObj:messageInfo)
+            {
+                if(sendObj instanceof SendMessage){
+                    SendMessage sendMessage = (SendMessage)sendObj;
+                    sendMessage(sendMessage);
+                    break;
+                }
+                if(sendObj instanceof SendAudio){
+                    SendAudio sendAudio = (SendAudio) sendObj;
+                    sendAudio(sendAudio);
+                    break;
+                }
+            }
+            SendMessage sendMessage = new SendMessage();
+            this.setButtons(sendMessage);
             sendMessage(sendMessage);
         }
-        catch (TelegramApiException e) {
-            e.printStackTrace();
+        catch (TelegramApiException ex) {
+            ex.printStackTrace();
         }
     }
 
     public void onUpdateReceived(Update update){
         Message message = update.getMessage();
         if (message !=  null && message.hasText()){
-            this.sendMsg(message,message.getText());
+            this.sendMsg(MainDialogueListiner.getInstance()
+                    .getHandler(message.getText().split(" ")[0]).handle(message));
         }
     }
 
@@ -58,8 +72,7 @@ public class Bot extends TelegramLongPollingBot {
         List<KeyboardRow> keyboardRowsList = new ArrayList<>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
 
-        keyboardFirstRow.add(new KeyboardButton("/help"));
-        keyboardFirstRow.add(new KeyboardButton("/start"));
+        keyboardFirstRow.add(new KeyboardButton("!start"));
 
         keyboardRowsList.add(keyboardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowsList);
