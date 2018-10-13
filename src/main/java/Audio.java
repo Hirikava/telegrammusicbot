@@ -16,15 +16,18 @@ import java.util.concurrent.TimeUnit;
 public class Audio {
 
     private static WebDriver driver;
-    private String path = "src/main/resources/audioFiles";
+    private String path;
     private String name;
 
-    public Audio(String link) {
+    public Audio(String link, long chatId) {
+        path = "src/main/resources/audioFiles/" + chatId;
+        File dir = new File(path);
+        dir.mkdir();
         browserSetup();
         download(link);
     }
 
-    private void browserSetup(){
+    private void browserSetup() {
         System.setProperty("webdriver.chrome.driver", "/home/artem/IdeaProjects/Bot/telegrammusicbot/src/main/resources/drivers/chromedriver");
         HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
         chromePrefs.put("profile.default_content_settings.popups", 0);
@@ -49,37 +52,29 @@ public class Audio {
                 .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div[class$='ready']")));
         WebElement downloadButton = driver.findElement(By.cssSelector("li.media-parent"));
         downloadButton.click();
-        File papka = new File(path+"/newpapaka");
-        papka.mkdir();
-        FindAudio();
-        while (isDownloading(name));
+        isDownloading();
         driver.quit();
+        FindAudio();
     }
 
     //Проверка загружен ли файл
-    private boolean isDownloading(String file) {
+    private void isDownloading() {
         File folder = new File(path);
         File[] audiofiles = folder.listFiles();
-        while(!Arrays.asList(audiofiles).contains(file)) {
+        while (audiofiles.length==0) {
+            folder = new File(path);
             audiofiles = folder.listFiles();
         }
-        return true;
+        while (!audiofiles[0].getName().endsWith("mp3")){
+            folder = new File(path);
+            audiofiles = folder.listFiles();
+        }
     }
 
     private void FindAudio() {
         File folder = new File(path);
-        String downloadFile = null;
         File[] audiofiles = folder.listFiles();
-        while (downloadFile == null){
-            audiofiles = folder.listFiles();
-            for (File audio: audiofiles) {
-                if (audio.getName().endsWith("crdownload")) {
-                    downloadFile = audio.getName();
-                    break;
-                }
-            }
-        }
-        name = downloadFile.substring(0, downloadFile.length()-10);
+        name = audiofiles[0].getName();
     }
 
     public String getPath() {
