@@ -23,12 +23,8 @@ public class DialogueListner {
     }
     public IHandler getHandler(String command)
     {
-        try{
-            IHandler handler = commandHandlerDict.get(command);
-            return handler;
-        }
-        catch (Exception ex) {
-            return new StringHandler("Command not found.");
-        }
+        if(commandHandlerDict.containsKey(command))
+            return commandHandlerDict.get(command);
+        return new StringHandler("Command not found :(");
     }
 }

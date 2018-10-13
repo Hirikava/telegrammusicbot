@@ -1,9 +1,11 @@
+import DataBaseManager.DataBase;
 import HandlerManager.MainDialogueListiner;
 import HandlerManager.MessageInfo;
 import HandlerManager.StringHandler;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.api.methods.send.SendAudio;
+import org.telegram.telegrambots.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
@@ -21,6 +23,7 @@ public class Bot extends TelegramLongPollingBot {
 
     public static void main(String[] args) {
         ApiContextInitializer.init();
+        DataBase.Initialization("jdbc:sqlite:src/DataBase.db");
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try{
             telegramBotsApi.registerBot(new Bot());
@@ -30,7 +33,7 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendMsg(MessageInfo messageInfo){
+    public void sendMsg(MessageInfo messageInfo, Long chatId){
         try {
             for(Object sendObj:messageInfo)
             {
@@ -45,9 +48,6 @@ public class Bot extends TelegramLongPollingBot {
                     break;
                 }
             }
-            SendMessage sendMessage = new SendMessage();
-            this.setButtons(sendMessage);
-            sendMessage(sendMessage);
         }
         catch (TelegramApiException ex) {
             ex.printStackTrace();
@@ -58,7 +58,7 @@ public class Bot extends TelegramLongPollingBot {
         Message message = update.getMessage();
         if (message !=  null && message.hasText()){
             this.sendMsg(MainDialogueListiner.getInstance()
-                    .getHandler(message.getText().split(" ")[0]).handle(message));
+                    .getHandler(message.getText().split(" ")[0]).handle(message),message.getChatId());
         }
     }
 
