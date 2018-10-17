@@ -23,7 +23,7 @@ public class Bot extends TelegramLongPollingBot {
 
     public static void main(String[] args) {
         ApiContextInitializer.init();
-        DataBase.Initialization("jdbc:sqlite:src/DataBase.db");
+        DataBase.Initialization("jdbc:sqlite:src/main/resources/dataBase/DataBase.db");
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try{
             telegramBotsApi.registerBot(new Bot());

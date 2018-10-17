@@ -1,6 +1,5 @@
-import org.junit.Assert;
-import org.junit.Test;
+import HandlerManager.LinkHandler;
 
 public class LinkTest {
-
+    LinkHandler linkHandler = new LinkHandler();
 }

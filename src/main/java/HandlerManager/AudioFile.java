@@ -1,3 +1,6 @@
+package HandlerManager;
+
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,13 +16,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-public class Audio {
+public class AudioFile {
 
     private static WebDriver driver;
     private String path;
     private String name;
 
-    public Audio(String link, long chatId) {
+    public AudioFile(String link, Long chatId) {
         path = "src/main/resources/audioFiles/" + chatId;
         File dir = new File(path);
         dir.mkdir();
@@ -61,7 +64,8 @@ public class Audio {
     private void isDownloading() {
         File folder = new File(path);
         File[] audiofiles = folder.listFiles();
-        while (audiofiles.length==0) {
+        int len = audiofiles.length;
+        while (audiofiles.length==len) {
             folder = new File(path);
             audiofiles = folder.listFiles();
         }
@@ -74,7 +78,7 @@ public class Audio {
     private void FindAudio() {
         File folder = new File(path);
         File[] audiofiles = folder.listFiles();
-        name = audiofiles[0].getName();
+        name = audiofiles[audiofiles.length - 1].getName();
     }
 
     public String getPath() {

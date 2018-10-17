@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class DataBaseParalelTest {
     @Test
     public void DataBaseParalelTest() {
-        DataBase.Initialization("jdbc:sqlite:src/DataBase.db");
+        DataBase.Initialization("jdbc:sqlite:src/main/resources/dataBase/DataBase.db");
         Connection connection = DataBase.getInstance().getConecction();
         try {
             connection.createStatement().execute("CREATE TABLE Users ( userID BIGINT );");

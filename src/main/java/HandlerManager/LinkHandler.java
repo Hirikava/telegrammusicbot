@@ -1,3 +1,5 @@
+package HandlerManager;
+
 import HandlerManager.IHandler;
 import HandlerManager.MessageInfo;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -22,7 +24,7 @@ public class LinkHandler implements IHandler {
         return messageInfo;
     }
 
-    private String SearchLink(String str){
+    public String SearchLink(String str){
         String youtubeLinkForSearching = "https://www.youtube.com/results?search_query=";
         String youtubeSearchingResultLink = youtubeLinkForSearching + str.replaceAll(" ", "+");
         String youtubeLink = "https://www.youtube.com";

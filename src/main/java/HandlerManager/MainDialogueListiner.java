@@ -11,5 +11,7 @@ public class MainDialogueListiner extends DialogueListner {
 
     private MainDialogueListiner() {
         this.addNewHandler("!start", new StartHandler());
+        this.addNewHandler("!play", new AudioSendHandler());
+        this.addNewHandler("!link", new LinkHandler());
     }
 }
