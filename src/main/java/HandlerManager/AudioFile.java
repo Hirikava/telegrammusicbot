@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -22,8 +23,13 @@ public class AudioFile {
     private String path;
     private String name;
 
-    public AudioFile(String link, Long chatId) {
+    public AudioFile(String link, Long chatId){
         path = "src/main/resources/audioFiles/" + chatId;
+        try {
+            FileUtils.cleanDirectory(new File("src/main/resources/audioFiles/"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         File dir = new File(path);
         dir.mkdir();
         browserSetup();
@@ -64,12 +70,11 @@ public class AudioFile {
     private void isDownloading() {
         File folder = new File(path);
         File[] audiofiles = folder.listFiles();
-        int len = audiofiles.length;
-        while (audiofiles.length==len) {
+        while (audiofiles.length==0) {
             folder = new File(path);
             audiofiles = folder.listFiles();
         }
-        while (!audiofiles[0].getName().endsWith("mp3")){
+        while (!audiofiles[0].getName().endsWith("mp3")) {
             folder = new File(path);
             audiofiles = folder.listFiles();
         }
@@ -78,7 +83,7 @@ public class AudioFile {
     private void FindAudio() {
         File folder = new File(path);
         File[] audiofiles = folder.listFiles();
-        name = audiofiles[audiofiles.length - 1].getName();
+        name = audiofiles[0].getName();
     }
 
     public String getPath() {
